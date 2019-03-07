@@ -9,6 +9,8 @@ namespace BT.Ex {
 		private Function _function;
 		private List<Vector3> _targets;
 
+        private const float EPSILON = 0.0001f;
+
 
 		public CheckVector3 (string dataToCheck, Function function, List<Vector3> targets = null) : base (dataToCheck) {
 			_function = function;
@@ -17,89 +19,69 @@ namespace BT.Ex {
 
 		public override bool Check () {
 			Vector3 data = database.GetData<Vector3>(_dataIdToCheck);
+            switch (_function)
+            {
+                case Function.NotZero:
+                    return data != Vector3.zero;
+                case Function.Zero:
+                    return data == Vector3.zero;
+                case Function.XNotZero:
+                    return System.Math.Abs(data.x) > EPSILON;
+                case Function.XZero:
+                    return System.Math.Abs(data.x) < EPSILON;
+                case Function.XPositive:
+                    return data.x > 0;
+                case Function.XNegative:
+                    return data.x < 0;
+                case Function.XNotPositive:
+                    return data.x <= 0;
+                case Function.XNotNegative:
+                    return data.x >= 0;
+                case Function.YNotZero:
+                    return System.Math.Abs(data.y) > EPSILON;
+                case Function.YZero:
+                    return System.Math.Abs(data.y) < EPSILON;
+                case Function.YPositive:
+                    return data.y > 0;
+                case Function.YNegative:
+                    return data.y < 0;
+                case Function.YNotPositive:
+                    return data.y <= 0;
+                case Function.YNotNegative:
+                    return data.y >= 0;
+                case Function.ZNotZero:
+                    return System.Math.Abs(data.z) > EPSILON;
+                case Function.ZZero:
+                    return System.Math.Abs(data.z) < EPSILON;
+                case Function.ZPositive:
+                    return data.z > 0;
+                case Function.ZNegative:
+                    return data.z < 0;
+                case Function.ZNotPositive:
+                    return data.z <= 0;
+                case Function.ZNotNegative:
+                    return data.z >= 0;
+                case Function.MatchAny:
+                    foreach (Vector3 target in _targets)
+                    {
+                        if (data == target)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                case Function.MatchNone:
+                    foreach (Vector3 target in _targets)
+                    {
+                        if (data == target)
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+            }
 
-			if (_function == Function.NotZero) {
-				return data != Vector3.zero;
-			}
-			else if (_function == Function.Zero) {
-				return data == Vector3.zero;
-			}
-
-			else if (_function == Function.XNotZero) {
-				return data.x != 0;
-			}
-			else if (_function == Function.XZero) {
-				return data.x == 0;
-			}
-			else if (_function == Function.XPositive) {
-				return data.x > 0;
-			}
-			else if (_function == Function.XNegative) {
-				return data.x < 0;
-			}
-			else if (_function == Function.XNotPositive) {
-				return data.x <= 0;
-			}
-			else if (_function == Function.XNotNegative) {
-				return data.x >= 0;
-			}
-
-			else if (_function == Function.YNotZero) {
-				return data.y != 0;
-			}
-			else if (_function == Function.YZero) {
-				return data.y == 0;
-			}
-			else if (_function == Function.YPositive) {
-				return data.y > 0;
-			}
-			else if (_function == Function.YNegative) {
-				return data.y < 0;
-			}
-			else if (_function == Function.YNotPositive) {
-				return data.y <= 0;
-			}
-			else if (_function == Function.YNotNegative) {
-				return data.y >= 0;
-			}
-
-			else if (_function == Function.ZNotZero) {
-				return data.z != 0;
-			}
-			else if (_function == Function.ZZero) {
-				return data.z == 0;
-			}
-			else if (_function == Function.ZPositive) {
-				return data.z > 0;
-			}
-			else if (_function == Function.ZNegative) {
-				return data.z < 0;
-			}
-			else if (_function == Function.ZNotPositive) {
-				return data.z <= 0;
-			}
-			else if (_function == Function.ZNotNegative) {
-				return data.z >= 0;
-			}
-
-			else if (_function == Function.MatchAny) {
-				foreach (Vector3 target in _targets) {
-					if (data == target) {
-						return true;
-					}
-				}
-				return false;
-			}
-			else if (_function == Function.MatchNone) {
-				foreach (Vector3 target in _targets) {
-					if (data == target) {
-						return false;
-					}
-				}
-				return true;
-			}
-
-			return false;
+            return false;
 		}
 
 		public enum Function {

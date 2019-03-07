@@ -28,6 +28,7 @@ public abstract class BTTree : MonoBehaviour {
 
 		_root.Activate(database);
 	}
+
 	void Update () {
 		if (!isRunning) return;
 		
